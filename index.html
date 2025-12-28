@@ -1,0 +1,2434 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boshnarsa Yasimiz - Professional Restoran Boshqaruv Tizimi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #d32f2f;
+            --primary-dark: #b71c1c;
+            --primary-light: #ff6659;
+            --secondary-color: #4caf50;
+            --dark-color: #2c3e50;
+            --light-color: #f8f9fa;
+            --gray-color: #95a5a6;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .logo-text p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info span {
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Page Container */
+        .page-container {
+            display: none;
+            min-height: calc(100vh - 120px);
+            padding: 30px 0;
+        }
+
+        .page-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .page-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .page-title h2 {
+            font-size: 2rem;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Dashboard Page */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+
+        .stat-icon.income { background-color: var(--secondary-color); }
+        .stat-icon.orders { background-color: #3498db; }
+        .stat-icon.customers { background-color: #9b59b6; }
+        .stat-icon.products { background-color: #e74c3c; }
+
+        .stat-info h3 {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            margin-bottom: 5px;
+        }
+
+        .stat-info p {
+            color: var(--gray-color);
+            font-size: 0.95rem;
+        }
+
+        .dashboard-charts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 1100px) {
+            .dashboard-charts {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-header h3 {
+            color: var(--dark-color);
+            font-size: 1.3rem;
+        }
+
+        .time-selector {
+            display: flex;
+            gap: 10px;
+        }
+
+        .time-btn {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .time-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .chart-placeholder {
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            color: var(--gray-color);
+            font-weight: 600;
+        }
+
+        .recent-orders {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .recent-orders h3 {
+            color: var(--dark-color);
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .orders-table th {
+            text-align: left;
+            padding: 15px;
+            background-color: #f8f9fa;
+            color: var(--dark-color);
+            font-weight: 600;
+            border-bottom: 2px solid #eee;
+        }
+
+        .orders-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .order-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-completed { background-color: #d4edda; color: #155724; }
+        .status-pending { background-color: #fff3cd; color: #856404; }
+        .status-cancelled { background-color: #f8d7da; color: #721c24; }
+
+        /* Menu Page */
+        .menu-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 50px;
+            padding: 10px 20px;
+            box-shadow: var(--shadow);
+            width: 300px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            flex-grow: 1;
+            padding: 5px 10px;
+            font-size: 1rem;
+        }
+
+        .add-item-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        .add-item-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .menu-items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .menu-item-card {
+            background: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .menu-item-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .item-image {
+            height: 200px;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-color);
+            font-size: 4rem;
+        }
+
+        .item-info {
+            padding: 20px;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .item-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        .item-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .item-description {
+            color: var(--gray-color);
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .item-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-stock {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .stock-in { color: var(--secondary-color); }
+        .stock-out { color: var(--primary-color); }
+
+        .item-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .edit-btn, .delete-btn {
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: var(--transition);
+        }
+
+        .edit-btn {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .delete-btn {
+            background-color: #ffebee;
+            color: #d32f2f;
+        }
+
+        .edit-btn:hover {
+            background-color: #bbdefb;
+        }
+
+        .delete-btn:hover {
+            background-color: #ffcdd2;
+        }
+
+        /* POS Page */
+        .pos-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 1100px) {
+            .pos-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pos-menu {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .pos-categories {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            background-color: #f1f1f1;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .category-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .pos-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+        }
+
+        .pos-item {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .pos-item:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.03);
+        }
+
+        .pos-item-image {
+            height: 100px;
+            background-color: #eee;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-color);
+            font-size: 2.5rem;
+        }
+
+        .pos-item-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .pos-item-price {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .pos-cart {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .cart-header h3 {
+            color: var(--dark-color);
+            font-size: 1.5rem;
+        }
+
+        .clear-cart-btn {
+            background-color: #ffebee;
+            color: var(--primary-color);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .cart-items {
+            flex-grow: 1;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-info h4 {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: none;
+            background-color: #f1f1f1;
+            cursor: pointer;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-item-qty {
+            font-weight: 700;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .cart-total {
+            padding: 20px 0;
+            border-top: 2px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .total-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .total-amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .cart-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .checkout-btn, .print-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        .checkout-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .checkout-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .print-btn {
+            background-color: #f1f1f1;
+            color: var(--dark-color);
+        }
+
+        .print-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Reports Page */
+        .reports-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .date-range {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .date-input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+
+        .generate-report-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .report-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .report-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .report-card h3 {
+            color: var(--dark-color);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .report-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .report-change {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .change-up { color: var(--secondary-color); }
+        .change-down { color: var(--primary-color); }
+
+        .report-tables {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+        }
+
+        @media (max-width: 1100px) {
+            .report-tables {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .report-table-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+
+        .report-table-container h3 {
+            color: var(--dark-color);
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+        }
+
+        /* Settings Page */
+        .settings-container {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .settings-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .settings-sidebar {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .settings-menu {
+            list-style: none;
+        }
+
+        .settings-menu li {
+            border-bottom: 1px solid #eee;
+        }
+
+        .settings-menu a {
+            display: block;
+            padding: 20px;
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .settings-menu a:hover, .settings-menu a.active {
+            background-color: #f5f5f5;
+            color: var(--primary-color);
+        }
+
+        .settings-content {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .settings-section {
+            display: none;
+        }
+
+        .settings-section.active {
+            display: block;
+        }
+
+        .settings-section h3 {
+            color: var(--dark-color);
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+        }
+
+        .save-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+
+        .save-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 50px;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #ecf0f1;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #34495e;
+            color: #95a5a6;
+            font-size: 0.9rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            padding: 25px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: var(--dark-color);
+            font-size: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-color);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            nav ul {
+                gap: 10px;
+            }
+            
+            nav a {
+                padding: 8px 12px;
+                font-size: 1rem;
+            }
+            
+            .header-container {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+            
+            .logo-text h1 {
+                font-size: 1.5rem;
+            }
+            
+            .user-info {
+                order: 3;
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-cards, .menu-items-grid, .pos-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .menu-controls {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <div class="logo-text">
+                    <h1>olim shashli</h1>
+
+                </div>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="#" class="nav-link active" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="#" class="nav-link" data-page="menu"><i class="fas fa-utensils"></i> Menyu</a></li>
+                    <li><a href="#" class="nav-link" data-page="pos"><i class="fas fa-cash-register"></i> POS</a></li>
+                    <!-- <li><a href="#" class="nav-link" data-page="reports"><i class="fas fa-chart-bar"></i> Hisobotlar</a></li> -->
+                    <li><a href="#" class="nav-link" data-page="settings"><i class="fas fa-cog"></i> Sozlamalar</a></li>
+                </ul>
+            </nav>
+            
+        </div>
+    </header>
+
+    <!-- Dashboard Page -->
+    <section id="dashboard" class="page-container active">
+        <div class="container">
+            <div class="page-title">
+                <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+                <div class="date-display">30 May, 2023 - 12:45 PM</div>
+            </div>
+            
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-icon income">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-revenue">5,430,000 so'm</h3>
+                        <p>Bugungi daromad</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon orders">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-orders">124 ta</h3>
+                        <p>Bugungi buyurtmalar</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon customers">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-customers">89 ta</h3>
+                        <p>Bugungi mijozlar</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon products">
+                        <i class="fas fa-hamburger"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-products">12 ta</h3>
+                        <p>Menyudagi mahsulotlar</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dashboard-charts">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Daromad o'zgarishi</h3>
+                        <div class="time-selector">
+                            <button class="time-btn active" data-period="day">Kunlik</button>
+                            <button class="time-btn" data-period="week">Haftalik</button>
+                            <button class="time-btn" data-period="month">Oylik</button>
+                        </div>
+                    </div>
+                    <div class="chart-placeholder">
+                        <i class="fas fa-chart-line"></i> Daromad grafigi
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Ko'p sotiladigan ovqatlar</h3>
+                        <div class="time-selector">
+                            <button class="time-btn active" data-period="day">Kunlik</button>
+                            <button class="time-btn" data-period="week">Haftalik</button>
+                        </div>
+                    </div>
+                    <div class="chart-placeholder">
+                        <i class="fas fa-chart-pie"></i> Mahsulotlar grafigi
+                    </div>
+                </div>
+            </div>
+            
+            <div class="recent-orders">
+                <h3>So'nggi buyurtmalar</h3>
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Buyurtma raqami</th>
+                            <th>Mijoz</th>
+                            <th>Summa</th>
+                            <th>Holati</th>
+                            <th>Vaqti</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-orders-table">
+                        <!-- Orders will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Page -->
+    <section id="menu" class="page-container">
+        <div class="container">
+            <div class="page-title">
+                <h2><i class="fas fa-utensils"></i> Menyu Boshqaruvi</h2>
+                <button class="add-item-btn" id="add-item-btn">
+                    <i class="fas fa-plus"></i> Yangi ovqat qo'shish
+                </button>
+            </div>
+            
+            <div class="menu-controls">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="menu-search" placeholder="Ovqat nomi bo'yicha qidirish...">
+                </div>
+                
+                <div class="filter-buttons">
+                    <button class="time-btn active" data-filter="all">Hammasi</button>
+                    <button class="time-btn" data-filter="in-stock">Sotuvda bor</button>
+                    <button class="time-btn" data-filter="out-of-stock">Sotuvda yo'q</button>
+                </div>
+            </div>
+            
+            <div class="menu-items-grid" id="menu-items-container">
+                <!-- Menu items will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- POS Page -->
+    <section id="pos" class="page-container">
+        <div class="container">
+            <div class="page-title">
+                <h2><i class="fas fa-cash-register"></i> Kassir Tizimi (POS)</h2>
+                <div class="current-time">12:45 PM</div>
+            </div>
+            
+            <div class="pos-container">
+                <div class="pos-menu">
+                    <div class="pos-categories">
+                        <button class="category-btn active" data-category="all">Hammasi</button>
+                        <button class="category-btn" data-category="hot">Issiq ovqatlar</button>
+                        <button class="category-btn" data-category="cold">Sovuq ovqatlar</button>
+                        <button class="category-btn" data-category="drinks">Ichimliklar</button>
+                    </div>
+                    
+                    <div class="pos-items" id="pos-items-container">
+                        <!-- POS items will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="pos-cart">
+                    <div class="cart-header">
+                        <h3>Joriy buyurtma</h3>
+                        <button class="clear-cart-btn" id="clear-cart-btn">
+                            <i class="fas fa-trash"></i> Tozalash
+                        </button>
+                    </div>
+                    
+                    <div class="cart-items" id="cart-items-container">
+                        <!-- Cart items will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="cart-total">
+                        <div class="total-label">Jami:</div>
+                        <div class="total-amount" id="cart-total">0 so'm</div>
+                    </div>
+                    
+                    <div class="cart-actions">
+                        <button class="print-btn" id="print-btn">
+                            <i class="fas fa-print"></i> Chek chiqarish
+                        </button>
+                        <button class="checkout-btn" id="checkout-btn">
+                            <i class="fas fa-credit-card"></i> To'lash (0 so'm)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reports Page -->
+    <section id="reports" class="page-container">
+        <div class="container">
+            <div class="page-title">
+                <h2><i class="fas fa-chart-bar"></i> Hisobotlar va Tahlillar</h2>
+                <div class="date-range">
+                    <input type="date" class="date-input" id="start-date" value="2023-05-01">
+                    <span>dan</span>
+                    <input type="date" class="date-input" id="end-date" value="2023-05-30">
+                    <button class="generate-report-btn" id="generate-report-btn">
+                        <i class="fas fa-filter"></i> Hisobotni ko'rish
+                    </button>
+                </div>
+            </div>
+            
+            <div class="report-cards">
+                <div class="report-card">
+                    <h3><i class="fas fa-money-bill-wave"></i> Umumiy daromad</h3>
+                    <div class="report-value" id="report-revenue">0 so'm</div>
+                    <div class="report-change change-up">
+                        <i class="fas fa-arrow-up"></i> 0% o'tgan oyga nisbatan
+                    </div>
+                </div>
+                
+                <div class="report-card">
+                    <h3><i class="fas fa-shopping-cart"></i> Buyurtmalar soni</h3>
+                    <div class="report-value" id="report-orders">0 ta</div>
+                    <div class="report-change change-up">
+                        <i class="fas fa-arrow-up"></i> 0% o'tgan oyga nisbatan
+                    </div>
+                </div>
+                
+                <div class="report-card">
+                    <h3><i class="fas fa-users"></i> Mijozlar soni</h3>
+                    <div class="report-value" id="report-customers">0 ta</div>
+                    <div class="report-change change-down">
+                        <i class="fas fa-arrow-down"></i> 0% o'tgan oyga nisbatan
+                    </div>
+                </div>
+                
+                <div class="report-card">
+                    <h3><i class="fas fa-percentage"></i> O'rtacha buyurtma</h3>
+                    <div class="report-value" id="report-average">0 so'm</div>
+                    <div class="report-change change-up">
+                        <i class="fas fa-arrow-up"></i> 0% o'tgan oyga nisbatan
+                    </div>
+                </div>
+            </div>
+            
+            <div class="report-tables">
+                <div class="report-table-container">
+                    <h3>Eng ko'p sotilgan ovqatlar</h3>
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Ovqat nomi</th>
+                                <th>Sotilgan miqdor</th>
+                                <th>Daromad</th>
+                                <th>Foiz</th>
+                            </tr>
+                        </thead>
+                        <tbody id="top-products-table">
+                            <!-- Top products will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="report-table-container">
+                    <h3>Eng faol kunlar</h3>
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Kun</th>
+                                <th>Buyurtmalar</th>
+                                <th>Daromad</th>
+                                <th>O'rtacha</th>
+                            </tr>
+                        </thead>
+                        <tbody id="top-days-table">
+                            <!-- Top days will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- Settings Page -->
+    <section id="settings" class="page-container">
+        <div class="container settings-container">
+            <div class="settings-sidebar">
+                <ul class="settings-menu">
+                    <li><a href="#" class="settings-link active" data-section="general"><i class="fas fa-cog"></i> Umumiy sozlamalar</a></li>
+                    <li><a href="#" class="settings-link" data-section="restaurant"><i class="fas fa-store"></i> Restoran ma'lumotlari</a></li>
+                    <li><a href="#" class="settings-link" data-section="users"><i class="fas fa-user-cog"></i> Foydalanuvchilar</a></li>
+                    <li><a href="#" class="settings-link" data-section="tax"><i class="fas fa-percentage"></i> Soliq sozlamalari</a></li>
+                    <li><a href="#" class="settings-link" data-section="printer"><i class="fas fa-print"></i> Printer sozlamalari</a></li>
+                    <li><a href="#" class="settings-link" data-section="backup"><i class="fas fa-database"></i> Ma'lumotlarni saqlash</a></li>
+                </ul>
+            </div>
+            
+            <div class="settings-content">
+                <div class="settings-section active" id="general-section">
+                    <h3>Umumiy sozlamalar</h3>
+                    <div class="form-group">
+                        <label>Tizim nomi</label>
+                        <input type="text" class="form-control" value="Boshnarsa Yasimiz Restorani">
+                    </div>
+                    <div class="form-group">
+                        <label>Valyuta</label>
+                        <select class="form-control">
+                            <option>So'm (UZS)</option>
+                            <option>AQSH dollari (USD)</option>
+                            <option>Yevro (EUR)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Vaqt formati</label>
+                        <select class="form-control">
+                            <option>24 soat (14:30)</option>
+                            <option>12 soat (2:30 PM)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Sana formati</label>
+                        <select class="form-control">
+                            <option>DD/MM/YYYY</option>
+                            <option>MM/DD/YYYY</option>
+                            <option>YYYY-MM-DD</option>
+                        </select>
+                    </div>
+                    <button class="save-btn"><i class="fas fa-save"></i> Saqlash</button>
+                </div>
+                
+                <div class="settings-section" id="restaurant-section">
+                    <h3>Restoran ma'lumotlari</h3>
+                    <div class="form-group">
+                        <label>Restoran nomi</label>
+                        <input type="text" class="form-control" value="Boshnarsa Yasimiz">
+                    </div>
+                    <div class="form-group">
+                        <label>Manzil</label>
+                        <input type="text" class="form-control" value="Toshkent shahar, Yunusobod tumani">
+                    </div>
+                    <div class="form-group">
+                        <label>Telefon raqam</label>
+                        <input type="text" class="form-control" value="+998 90 123 45 67">
+                    </div>
+                    <div class="form-group">
+                        <label>Elektron pochta</label>
+                        <input type="email" class="form-control" value="info@boshnarsayasimiz.uz">
+                    </div>
+                    <div class="form-group">
+                        <label>Ish vaqtlari</label>
+                        <input type="text" class="form-control" value="09:00 - 23:00 (Har kuni)">
+                    </div>
+                    <button class="save-btn"><i class="fas fa-save"></i> Saqlash</button>
+                </div>
+                
+                <div class="settings-section" id="users-section">
+                    <h3>Foydalanuvchilar boshqaruvi</h3>
+                    <p>Foydalanuvchilar ro'yxati va ularning huquqlarini boshqarish</p>
+                    <button class="save-btn"><i class="fas fa-user-plus"></i> Yangi foydalanuvchi qo'shish</button>
+                </div>
+                
+                <div class="settings-section" id="tax-section">
+                    <h3>Soliq sozlamalari</h3>
+                    <div class="form-group">
+                        <label>QQS foizi (%)</label>
+                        <input type="number" class="form-control" value="15" min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Xizmat haqi foizi (%)</label>
+                        <input type="number" class="form-control" value="10" min="0" max="100">
+                    </div>
+                    <button class="save-btn"><i class="fas fa-save"></i> Saqlash</button>
+                </div>
+                
+                <div class="settings-section" id="printer-section">
+                    <h3>Printer sozlamalari</h3>
+                    <div class="form-group">
+                        <label>Printer nomi</label>
+                        <input type="text" class="form-control" value="EPSON TM-T88V">
+                    </div>
+                    <div class="form-group">
+                        <label>Chek o'lchami</label>
+                        <select class="form-control">
+                            <option>80 mm</option>
+                            <option>58 mm</option>
+                        </select>
+                    </div>
+                    <button class="save-btn"><i class="fas fa-save"></i> Saqlash</button>
+                </div>
+                
+                <div class="settings-section" id="backup-section">
+                    <h3>Ma'lumotlarni saqlash</h3>
+                    <p>Ma'lumotlaringizni zaxiralash yoki tiklash</p>
+                    <div class="form-group">
+                        <button class="save-btn"><i class="fas fa-download"></i> Ma'lumotlarni yuklab olish</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Ma'lumotlarni tiklash</label>
+                        <input type="file" class="form-control">
+                    </div>
+                    <button class="save-btn"><i class="fas fa-upload"></i> Ma'lumotlarni tiklash</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-container">
+            <div class="footer-column">
+                <h3>olim shashli</h3>
+                <p>Professional restoran boshqaruv tizimi. Barcha turdagi restoran, kafe va oshxonalar uchun.</p>
+                <div style="margin-top: 15px;">
+                    <i class="fas fa-phone" style="margin-right: 10px;"></i> +998 97 719 26 26<br>
+                    <i class="fas fa-envelope" style="margin-right: 10px;"></i> olimshashli@gmail.com
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Tez havolalar</h3>
+                <ul class="footer-links">
+                    <li><a href="#" data-page="dashboard">Dashboard</a></li>
+                    <li><a href="#" data-page="menu">Menyu boshqaruvi</a></li>
+                    <li><a href="#" data-page="pos">Kassir tizimi</a></li>
+                    <li><a href="#" data-page="reports">Hisobotlar</a></li>
+                    <li><a href="#" data-page="settings">Sozlamalar</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Qo'shimcha</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Yordam markazi</a></li>
+                    <li><a href="#">Foydalanish qo'llanmasi</a></li>
+                    <li><a href="#">Video darsliklar</a></li>
+                    <li><a href="#">Yangiliklar</a></li>
+                    <li><a href="#">Biz bilan bog'lanish</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Biz ijtimoiy tarmoqlarda</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fab fa-telegram" style="margin-right: 8px;"></i> Telegram</a></li>
+                    <li><a href="#"><i class="fab fa-instagram" style="margin-right: 8px;"></i> Instagram</a></li>
+                    <li><a href="#"><i class="fab fa-facebook" style="margin-right: 8px;"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-youtube" style="margin-right: 8px;"></i> YouTube</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2023 Boshnarsa Yasimiz Restoran Boshqaruv Tizimi. Barcha huquqlar himoyalangan.
+        </div>
+    </footer>
+
+    <!-- Add Item Modal -->
+    <div class="modal" id="add-item-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Yangi ovqat qo'shish</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Ovqat nomi</label>
+                    <input type="text" class="form-control" id="item-name" placeholder="Masalan: Jaz">
+                </div>
+                <div class="form-group">
+                    <label>Narxi (so'm)</label>
+                    <input type="number" class="form-control" id="item-price" placeholder="Masalan: 26000" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Kategoriya</label>
+                    <select class="form-control" id="item-category">
+                        <option value="hot">Issiq ovqat</option>
+                        <option value="cold">Sovuq ovqat</option>
+                        <option value="drink">Ichimlik</option>
+                        <option value="dessert">Shirinlik</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tarif</label>
+                    <textarea class="form-control" id="item-description" rows="3" placeholder="Ovqat haqida qisqacha ma'lumot..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Zaxirada bor miqdor</label>
+                    <input type="number" class="form-control" id="item-stock" value="10" min="0">
+                </div>
+                <button class="save-btn" id="save-item-btn"><i class="fas fa-save"></i> Saqlash</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkout-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>To'lovni amalga oshirish</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Jami summa</label>
+                    <input type="text" class="form-control" id="checkout-total" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Mijoz to'lovi</label>
+                    <input type="number" class="form-control" id="customer-payment" min="0">
+                </div>
+                <div class="form-group">
+                    <label>Qaytim</label>
+                    <input type="text" class="form-control" id="change-amount" readonly>
+                </div>
+                <div class="form-group">
+                    <label>To'lov usuli</label>
+                    <select class="form-control" id="payment-method">
+                        <option value="cash">Naqd pul</option>
+                        <option value="card">Plastik karta</option>
+                        <option value="transfer">Pul o'tkazish</option>
+                    </select>
+                </div>
+                <div class="cart-actions">
+                    <button class="print-btn" id="final-print-btn"><i class="fas fa-print"></i> Chek chiqarish</button>
+                    <button class="checkout-btn" id="final-checkout-btn"><i class="fas fa-check"></i> To'lovni tasdiqlash</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application Data
+        const appData = {
+            menuItems: [
+                { id: 1, name: "Jaz", price: 26000, category: "hot", description: "Mazali qovurilgan jaz", stock: 15, image: "🍗" },
+                { id: 2, name: "Baliq", price: 22000, category: "hot", description: "Dengiz balig'i", stock: 10, image: "🐟" },
+                { id: 3, name: "Tovuq", price: 22000, category: "hot", description: "Qovurilgan tovuq go'shti", stock: 20, image: "🍗" },
+                { id: 4, name: "Kotlet", price: 22000, category: "hot", description: "Mol go'shtidan kotlet", stock: 12, image: "🍖" },
+                { id: 5, name: "To'vuq", price: 22000, category: "hot", description: "To'vuq sho'rva", stock: 8, image: "🍲" },
+                { id: 6, name: "Salat", price: 15000, category: "cold", description: "Sabzavotlar salati", stock: 25, image: "🥗" },
+                { id: 7, name: "Coca-Cola", price: 8000, category: "drink", description: "1.5L Coca-Cola", stock: 30, image: "🥤" },
+                { id: 8, name: "Choy", price: 3000, category: "drink", description: "Qora choy", stock: 50, image: "🍵" }
+            ],
+            cart: [],
+            orders: [
+                { id: 1001, customer: "Ali Valiyev", amount: 68000, status: "completed", time: "2023-05-30 12:30" },
+                { id: 1002, customer: "Dilnoza Xasanova", amount: 44000, status: "completed", time: "2023-05-30 12:15" },
+                { id: 1003, customer: "Shavkat Rahimov", amount: 26000, status: "pending", time: "2023-05-30 11:45" },
+                { id: 1004, customer: "Nigora Qodirova", amount: 102000, status: "completed", time: "2023-05-30 11:20" },
+                { id: 1005, customer: "Javohir Salimov", amount: 22000, status: "cancelled", time: "2023-05-30 10:50" }
+            ],
+            stats: {
+                dailyRevenue: 0     ,
+                dailyOrders: 0,
+                dailyCustomers: 0,
+                totalProducts: 8
+            }
+        };
+
+        // DOM Elements
+        const pageContainers = document.querySelectorAll('.page-container');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const settingsLinks = document.querySelectorAll('.settings-link');
+        const settingsSections = document.querySelectorAll('.settings-section');
+        const addItemModal = document.getElementById('add-item-modal');
+        const checkoutModal = document.getElementById('checkout-modal');
+        const closeModalButtons = document.querySelectorAll('.close-modal');
+        const addItemBtn = document.getElementById('add-item-btn');
+        const saveItemBtn = document.getElementById('save-item-btn');
+        const clearCartBtn = document.getElementById('clear-cart-btn');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const printBtn = document.getElementById('print-btn');
+        const finalCheckoutBtn = document.getElementById('final-checkout-btn');
+        const finalPrintBtn = document.getElementById('final-print-btn');
+        const menuItemsContainer = document.getElementById('menu-items-container');
+        const posItemsContainer = document.getElementById('pos-items-container');
+        const cartItemsContainer = document.getElementById('cart-items-container');
+        const cartTotal = document.getElementById('cart-total');
+        const checkoutBtnText = document.querySelector('#checkout-btn');
+        const recentOrdersTable = document.getElementById('recent-orders-table');
+        const topProductsTable = document.getElementById('top-products-table');
+        const topDaysTable = document.getElementById('top-days-table'); 
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const timeButtons = document.querySelectorAll('.time-btn');
+        const generateReportBtn = document.getElementById('generate-report-btn');
+        const menuSearch = document.getElementById('menu-search');
+        const filterButtons = document.querySelectorAll('.filter-buttons .time-btn');
+
+        // Initialize the application
+        function init() {
+            // Load data from localStorage if available
+            loadData();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Render initial data
+            renderMenuItems();
+            renderPOSItems();
+            updateCart();
+            renderRecentOrders();
+            renderTopProducts();
+            renderTopDays();
+            updateStats();
+            updateTime();
+            
+            // Update time every minute
+            setInterval(updateTime, 60000);
+        }
+
+        // Load data from localStorage
+        function loadData() {
+            const savedMenu = localStorage.getItem('restaurantMenu');
+            const savedCart = localStorage.getItem('restaurantCart');
+            const savedOrders = localStorage.getItem('restaurantOrders');
+            const savedStats = localStorage.getItem('restaurantStats');
+            
+            if (savedMenu) appData.menuItems = JSON.parse(savedMenu);
+            if (savedCart) appData.cart = JSON.parse(savedCart);
+            if (savedOrders) appData.orders = JSON.parse(savedOrders);
+            if (savedStats) appData.stats = JSON.parse(savedStats);
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('restaurantMenu', JSON.stringify(appData.menuItems));
+            localStorage.setItem('restaurantCart', JSON.stringify(appData.cart));
+            localStorage.setItem('restaurantOrders', JSON.stringify(appData.orders));
+            localStorage.setItem('restaurantStats', JSON.stringify(appData.stats));
+        }
+
+        // Set up all event listeners
+        function setupEventListeners() {
+            // Navigation
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('data-page');
+                    navigateToPage(pageId);
+                    
+                    // Update active nav link
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Settings navigation
+            settingsLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionId = this.getAttribute('data-section');
+                    
+                    // Update active settings link
+                    settingsLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show corresponding section
+                    settingsSections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === `${sectionId}-section`) {
+                            section.classList.add('active');
+                        }
+                    });
+                });
+            });
+
+            // Footer navigation
+            document.querySelectorAll('.footer-links a[data-page]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('data-page');
+                    navigateToPage(pageId);
+                    
+                    // Update active nav link
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    document.querySelector(`.nav-link[data-page="${pageId}"]`).classList.add('active');
+                });
+            });
+
+            // Modal controls
+            addItemBtn.addEventListener('click', () => {
+                addItemModal.classList.add('active');
+            });
+
+            closeModalButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    addItemModal.classList.remove('active');
+                    checkoutModal.classList.remove('active');
+                });
+            });
+
+            // Save new item
+            saveItemBtn.addEventListener('click', saveNewItem);
+
+            // Cart controls
+            clearCartBtn.addEventListener('click', clearCart);
+            checkoutBtn.addEventListener('click', () => {
+                if (appData.cart.length === 0) {
+                    alert('Savatcha bo\'sh! Avval mahsulot qo\'shing.');
+                    return;
+                }
+                showCheckoutModal();
+            });
+
+            printBtn.addEventListener('click', printReceipt);
+            finalCheckoutBtn.addEventListener('click', processCheckout);
+            finalPrintBtn.addEventListener('click', printReceipt);
+
+            // Category filters for POS
+            categoryButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    categoryButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    renderPOSItems(this.getAttribute('data-category'));
+                });
+            });
+
+            // Time period buttons
+            timeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from siblings in the same container
+                    const siblings = this.parentElement.querySelectorAll('.time-btn');
+                    siblings.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Generate report button
+            generateReportBtn.addEventListener('click', generateReport);
+
+            // Menu search
+            menuSearch.addEventListener('input', filterMenuItems);
+
+            // Menu filter buttons
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    filterMenuItems();
+                });
+            });
+
+            // Close modals when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === addItemModal) addItemModal.classList.remove('active');
+                if (e.target === checkoutModal) checkoutModal.classList.remove('active');
+            });
+
+            // Auto-save data every 30 seconds
+            setInterval(saveData, 30000);
+        }
+
+        // Navigate to different pages
+        function navigateToPage(pageId) {
+            pageContainers.forEach(page => {
+                page.classList.remove('active');
+                if (page.id === pageId) {
+                    page.classList.add('active');
+                }
+            });
+        }
+
+        // Render menu items
+        function renderMenuItems(filter = '') {
+            menuItemsContainer.innerHTML = '';
+            
+            let itemsToShow = appData.menuItems;
+            
+            // Apply search filter
+            if (filter) {
+                itemsToShow = itemsToShow.filter(item => 
+                    item.name.toLowerCase().includes(filter.toLowerCase())
+                );
+            }
+            
+            // Apply stock filter
+            const activeFilter = document.querySelector('.filter-buttons .time-btn.active');
+            if (activeFilter) {
+                const filterType = activeFilter.getAttribute('data-filter');
+                if (filterType === 'in-stock') {
+                    itemsToShow = itemsToShow.filter(item => item.stock > 0);
+                } else if (filterType === 'out-of-stock') {
+                    itemsToShow = itemsToShow.filter(item => item.stock === 0);
+                }
+            }
+            
+            if (itemsToShow.length === 0) {
+                menuItemsContainer.innerHTML = '<div class="empty-state">Hech qanday ovqat topilmadi</div>';
+                return;
+            }
+            
+            itemsToShow.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'menu-item-card';
+                itemElement.innerHTML = `
+                    <div class="item-image">
+                        <div style="font-size: 4rem;">${item.image}</div>
+                    </div>
+                    <div class="item-info">
+                        <div class="item-header">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-price">${item.price.toLocaleString()} so'm</div>
+                        </div>
+                        <div class="item-description">${item.description}</div>
+                        <div class="item-actions">
+                            <div class="item-stock ${item.stock > 0 ? 'stock-in' : 'stock-out'}">
+                                ${item.stock > 0 ? `Zaxirada: ${item.stock} ta` : 'Zaxirada yo\'q'}
+                            </div>
+                            <div class="item-buttons">
+                                <button class="edit-btn" data-id="${item.id}">
+                                    <i class="fas fa-edit"></i> Tahrirlash
+                                </button>
+                                <button class="delete-btn" data-id="${item.id}">
+                                    <i class="fas fa-trash"></i> O'chirish
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                menuItemsContainer.appendChild(itemElement);
+            });
+            
+            // Add event listeners to edit and delete buttons
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemId = parseInt(this.getAttribute('data-id'));
+                    editMenuItem(itemId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemId = parseInt(this.getAttribute('data-id'));
+                    deleteMenuItem(itemId);
+                });
+            });
+        }
+
+        // Render POS items
+        function renderPOSItems(category = 'all') {
+            posItemsContainer.innerHTML = '';
+            
+            let itemsToShow = appData.menuItems;
+            
+            if (category !== 'all') {
+                itemsToShow = itemsToShow.filter(item => item.category === category);
+            }
+            
+            itemsToShow.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'pos-item';
+                itemElement.setAttribute('data-id', item.id);
+                itemElement.innerHTML = `
+                    <div class="pos-item-image">
+                        <div style="font-size: 2.5rem;">${item.image}</div>
+                    </div>
+                    <div class="pos-item-name">${item.name}</div>
+                    <div class="pos-item-price">${item.price.toLocaleString()} so'm</div>
+                `;
+                posItemsContainer.appendChild(itemElement);
+            });
+            
+            // Add event listeners to POS items
+            document.querySelectorAll('.pos-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const itemId = parseInt(this.getAttribute('data-id'));
+                    addToCart(itemId);
+                });
+            });
+        }
+
+        // Add item to cart
+        function addToCart(itemId) {
+            const menuItem = appData.menuItems.find(item => item.id === itemId);
+            if (!menuItem) return;
+            
+            // Check if item is in stock
+            if (menuItem.stock <= 0) {
+                alert('Uzr, bu mahsulot zaxirada qolmagan!');
+                return;
+            }
+            
+            // Check if item already in cart
+            const cartItem = appData.cart.find(item => item.id === itemId);
+            
+            if (cartItem) {
+                cartItem.quantity++;
+            } else {
+                appData.cart.push({
+                    id: menuItem.id,
+                    name: menuItem.name,
+                    price: menuItem.price,
+                    quantity: 1,
+                    image: menuItem.image
+                });
+            }
+            
+            // Reduce stock
+            menuItem.stock--;
+            
+            updateCart();
+            saveData();
+        }
+
+        // Update cart display
+        function updateCart() {
+            cartItemsContainer.innerHTML = '';
+            
+            if (appData.cart.length === 0) {
+                cartItemsContainer.innerHTML = '<div class="empty-cart">Savatcha bo\'sh</div>';
+                cartTotal.textContent = '0 so\'m';
+                checkoutBtnText.innerHTML = `<i class="fas fa-credit-card"></i> To'lash (0 so'm)`;
+                return;
+            }
+            
+            let total = 0;
+            
+            appData.cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
+                const cartItemElement = document.createElement('div');
+                cartItemElement.className = 'cart-item';
+                cartItemElement.innerHTML = `
+                    <div class="cart-item-info">
+                        <h4>${item.name}</h4>
+                        <div class="cart-item-price">${item.price.toLocaleString()} so'm</div>
+                    </div>
+                    <div class="cart-item-controls">
+                        <button class="qty-btn minus-btn" data-index="${index}">-</button>
+                        <div class="cart-item-qty">${item.quantity}</div>
+                        <button class="qty-btn plus-btn" data-index="${index}">+</button>
+                        <button class="qty-btn remove-btn" data-index="${index}" style="margin-left: 15px; color: #d32f2f;">×</button>
+                    </div>
+                `;
+                cartItemsContainer.appendChild(cartItemElement);
+            });
+            
+            cartTotal.textContent = `${total.toLocaleString()} so'm`;
+            checkoutBtnText.innerHTML = `<i class="fas fa-credit-card"></i> To'lash (${total.toLocaleString()} so'm)`;
+            
+            // Add event listeners to cart controls
+            document.querySelectorAll('.plus-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    increaseQuantity(index);
+                });
+            });
+            
+            document.querySelectorAll('.minus-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    decreaseQuantity(index);
+                });
+            });
+            
+            document.querySelectorAll('.cart-item-controls .remove-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    removeFromCart(index);
+                });
+            });
+        }
+
+        // Increase item quantity in cart
+        function increaseQuantity(index) {
+            const cartItem = appData.cart[index];
+            const menuItem = appData.menuItems.find(item => item.id === cartItem.id);
+            
+            if (menuItem.stock > 0) {
+                cartItem.quantity++;
+                menuItem.stock--;
+                updateCart();
+                saveData();
+            } else {
+                alert('Uzr, bu mahsulot zaxirada qolmagan!');
+            }
+        }
+
+        // Decrease item quantity in cart
+        function decreaseQuantity(index) {
+            const cartItem = appData.cart[index];
+            const menuItem = appData.menuItems.find(item => item.id === cartItem.id);
+            
+            if (cartItem.quantity > 1) {
+                cartItem.quantity--;
+                menuItem.stock++;
+            } else {
+                // Remove item from cart if quantity becomes 0
+                removeFromCart(index);
+                return;
+            }
+            
+            updateCart();
+            saveData();
+        }
+
+        // Remove item from cart
+        function removeFromCart(index) {
+            const cartItem = appData.cart[index];
+            const menuItem = appData.menuItems.find(item => item.id === cartItem.id);
+            
+            // Return stock
+            menuItem.stock += cartItem.quantity;
+            
+            // Remove from cart
+            appData.cart.splice(index, 1);
+            
+            updateCart();
+            saveData();
+        }
+
+        // Clear cart
+        function clearCart() {
+            if (appData.cart.length === 0) return;
+            
+            if (!confirm('Savatchani tozalashni istaysizmi?')) return;
+            
+            // Return all items to stock
+            appData.cart.forEach(cartItem => {
+                const menuItem = appData.menuItems.find(item => item.id === cartItem.id);
+                if (menuItem) {
+                    menuItem.stock += cartItem.quantity;
+                }
+            });
+            
+            appData.cart = [];
+            updateCart();
+            saveData();
+        }
+
+        // Show checkout modal
+        function showCheckoutModal() {
+            const total = appData.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('checkout-total').value = `${total.toLocaleString()} so'm`;
+            document.getElementById('customer-payment').value = '';
+            document.getElementById('change-amount').value = '';
+            
+            // Add event listener to calculate change
+            document.getElementById('customer-payment').addEventListener('input', calculateChange);
+            
+            checkoutModal.classList.add('active');
+        }
+
+        // Calculate change
+        function calculateChange() {
+            const total = appData.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const payment = parseFloat(document.getElementById('customer-payment').value) || 0;
+            const change = payment - total;
+            
+            if (change >= 0) {
+                document.getElementById('change-amount').value = `${change.toLocaleString()} so'm`;
+            } else {
+                document.getElementById('change-amount').value = '0 so\'m';
+            }
+        }
+
+        // Process checkout
+        function processCheckout() {
+            const total = appData.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const payment = parseFloat(document.getElementById('customer-payment').value) || 0;
+            
+            if (payment < total) {
+                alert('To\'lov summasi yetarli emas!');
+                return;
+            }
+            
+            // Create order
+            const orderId = Math.floor(Math.random() * 9000) + 1000;
+            const now = new Date();
+            const orderTime = now.toLocaleString('uz-UZ');
+            
+            const newOrder = {
+                id: orderId,
+                customer: 'Kassadan',
+                amount: total,
+                status: 'completed',
+                time: orderTime
+            };
+            
+            appData.orders.unshift(newOrder);
+            
+            // Update stats
+            appData.stats.dailyRevenue += total;
+            appData.stats.dailyOrders++;
+            
+            // Clear cart
+            appData.cart = [];
+            
+            // Update UI
+            updateCart();
+            renderRecentOrders();
+            updateStats();
+            
+            // Close modal
+            checkoutModal.classList.remove('active');
+            
+            // Show success message
+            alert(`Buyurtma #${orderId} muvaffaqiyatli yakunlandi!\nJami: ${total.toLocaleString()} so'm`);
+            
+            // Print receipt
+            printReceipt();
+            
+            saveData();
+        }
+
+        // Print receipt
+        function printReceipt() {
+            const total = appData.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const now = new Date();
+            const receiptTime = now.toLocaleString('uz-UZ');
+            
+            let receiptContent = `
+                ===============================
+                BOSHNARSA YASIMIZ RESTORANI
+                ===============================
+                Sana: ${receiptTime}
+                ===============================
+                BUYURTMA:
+            `;
+            
+            appData.cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                receiptContent += `
+                ${item.name} x ${item.quantity}
+                ${item.price.toLocaleString()} so'm = ${itemTotal.toLocaleString()} so'm
+                `;
+            });
+            
+            receiptContent += `
+                ===============================
+                JAMI: ${total.toLocaleString()} so'm
+                ===============================
+                Rahmat, yana kelishingizni kutamiz!
+                ===============================
+            `;
+            
+            // In a real application, this would send to a printer
+            // For this demo, we'll just show an alert
+            alert('Chek printerga yuborildi!\n\n' + receiptContent);
+        }
+
+        // Save new menu item
+        function saveNewItem() {
+            const name = document.getElementById('item-name').value;
+            const price = parseInt(document.getElementById('item-price').value);
+            const category = document.getElementById('item-category').value;
+            const description = document.getElementById('item-description').value;
+            const stock = parseInt(document.getElementById('item-stock').value);
+            
+            if (!name || !price) {
+                alert('Iltimos, ovqat nomi va narxini kiriting!');
+                return;
+            }
+            
+            // Create new item
+            const newItem = {
+                id: appData.menuItems.length > 0 ? Math.max(...appData.menuItems.map(item => item.id)) + 1 : 1,
+                name: name,
+                price: price,
+                category: category,
+                description: description || 'Tavsif kiritilmagan',
+                stock: stock || 0,
+                image: getEmojiForCategory(category)
+            };
+            
+            appData.menuItems.push(newItem);
+            appData.stats.totalProducts++;
+            
+            // Update UI
+            renderMenuItems();
+            renderPOSItems();
+            updateStats();
+            
+            // Clear form and close modal
+            document.getElementById('item-name').value = '';
+            document.getElementById('item-price').value = '';
+            document.getElementById('item-description').value = '';
+            document.getElementById('item-stock').value = '10';
+            
+            addItemModal.classList.remove('active');
+            
+            saveData();
+        }
+
+        // Edit menu item
+        function editMenuItem(itemId) {
+            const item = appData.menuItems.find(item => item.id === itemId);
+            if (!item) return;
+            
+            // In a real app, this would open an edit modal
+            // For simplicity, we'll just show an alert
+            const newPrice = prompt(`"${item.name}" uchun yangi narxni kiriting (so'm):`, item.price);
+            if (newPrice !== null) {
+                const parsedPrice = parseInt(newPrice);
+                if (!isNaN(parsedPrice) && parsedPrice > 0) {
+                    item.price = parsedPrice;
+                    renderMenuItems();
+                    renderPOSItems();
+                    saveData();
+                    alert('Narx muvaffaqiyatli o\'zgartirildi!');
+                } else {
+                    alert('Iltimos, to\'g\'ri narx kiriting!');
+                }
+            }
+        }
+
+        // Delete menu item
+        function deleteMenuItem(itemId) {
+            const item = appData.menuItems.find(item => item.id === itemId);
+            if (!item) return;
+            
+            if (!confirm(`"${item.name}" ni rostdan ham o'chirmoqchimisiz?`)) return;
+            
+            // Remove item from menu
+            appData.menuItems = appData.menuItems.filter(item => item.id !== itemId);
+            appData.stats.totalProducts--;
+            
+            // Update UI
+            renderMenuItems();
+            renderPOSItems();
+            updateStats();
+            
+            saveData();
+        }
+
+        // Filter menu items
+        function filterMenuItems() {
+            const searchTerm = menuSearch.value;
+            renderMenuItems(searchTerm);
+        }
+
+        // Render recent orders
+        function renderRecentOrders() {
+            recentOrdersTable.innerHTML = '';
+            
+            // Show only recent 5 orders
+            const recentOrders = appData.orders.slice(0, 5);
+            
+            recentOrders.forEach(order => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>#${order.id}</td>
+                    <td>${order.customer}</td>
+                    <td>${order.amount.toLocaleString()} so'm</td>
+                    <td><span class="order-status status-${order.status}">${getStatusText(order.status)}</span></td>
+                    <td>${order.time}</td>
+                `;
+                recentOrdersTable.appendChild(row);
+            });
+        }
+
+        // Render top products
+        function renderTopProducts() {
+            topProductsTable.innerHTML = '';
+            
+            // For demo, use some sample data
+            const topProducts = [
+                { name: "Jaz", sold: 45, revenue: 1170000, percentage: 28 },
+                { name: "Tovuq", sold: 38, revenue: 836000, percentage: 20 },
+                { name: "Baliq", sold: 32, revenue: 704000, percentage: 17 },
+                { name: "Coca-Cola", sold: 28, revenue: 224000, percentage: 12 },
+                { name: "Kotlet", sold: 25, revenue: 550000, percentage: 10 }
+            ];
+            
+            topProducts.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.name}</td>
+                    <td>${product.sold} ta</td>
+                    <td>${product.revenue.toLocaleString()} so'm</td>
+                    <td>${product.percentage}%</td>
+                `;
+                topProductsTable.appendChild(row);
+            });
+        }
+
+        // Render top days
+        function renderTopDays() {
+            topDaysTable.innerHTML = '';
+            
+            // For demo, use some sample data
+            const topDays = [
+                { day: "30 May, Payshanba", orders: 42, revenue: 1250000, average: 29762 },
+                { day: "28 May, Seshanba", orders: 38, revenue: 980000, average: 25789 },
+                { day: "27 May, Dushanba", orders: 35, revenue: 920000, average: 26286 },
+                { day: "25 May, Shanba", orders: 40, revenue: 1180000, average: 29500 },
+                { day: "24 May, Juma", orders: 37, revenue: 1050000, average: 28378 }
+            ];
+            
+            topDays.forEach(day => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${day.day}</td>
+                    <td>${day.orders} ta</td>
+                    <td>${day.revenue.toLocaleString()} so'm</td>
+                    <td>${day.average.toLocaleString()} so'm</td>
+                `;
+                topDaysTable.appendChild(row);
+            });
+        }
+
+        // Update stats display
+        function updateStats() {
+            document.getElementById('total-revenue').textContent = `${appData.stats.dailyRevenue.toLocaleString()} so'm`;
+            document.getElementById('total-orders').textContent = `${appData.stats.dailyOrders} ta`;
+            document.getElementById('total-customers').textContent = `${appData.stats.dailyCustomers} ta`;
+            document.getElementById('total-products').textContent = `${appData.stats.totalProducts} ta`;
+        }
+
+        // Update time display
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' });
+            const dateString = now.toLocaleDateString('uz-UZ', { day: 'numeric', month: 'long', year: 'numeric' });
+            
+            // Update time in POS page
+            const timeElement = document.querySelector('.current-time');
+            if (timeElement) timeElement.textContent = timeString;
+            
+            // Update date in dashboard
+            const dateElement = document.querySelector('.date-display');
+            if (dateElement) dateElement.textContent = `${dateString} - ${timeString}`;
+        }
+
+        // Generate report
+        function generateReport() {
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
+            
+            // In a real app, this would filter data based on date range
+            // For demo, we'll just show an alert
+            alert(`Hisobot ${startDate} dan ${endDate} gacha uchun tayyorlandi!`);
+        }
+
+        // Helper functions
+        function getEmojiForCategory(category) {
+            switch(category) {
+                case 'hot': return '🍲';
+                case 'cold': return '🥗';
+                case 'drink': return '🥤';
+                case 'dessert': return '🍰';
+                default: return '🍽️';
+            }
+        }
+
+        function getStatusText(status) {
+            switch(status) {
+                case 'completed': return 'Yakunlangan';
+                case 'pending': return 'Kutilmoqda';
+                case 'cancelled': return 'Bekor qilingan';
+                default: return 'Noma\'lum';
+            }
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
